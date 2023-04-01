@@ -1,4 +1,4 @@
- use  bevy::prelude::*;
+ use  bevy::{prelude::*, window::PrimaryWindow};
 
  use crate::{
     components::Player,
@@ -16,16 +16,19 @@
 
 pub fn players_spawn_system(
     mut commands: Commands,
+    window_query: Query<&Window, With<PrimaryWindow>>,
 ) {
+    let window = window_query.get_single().unwrap();
+
     commands.spawn_batch(vec![
         (
             SpriteBundle {
                 sprite: Sprite {
-                    color: Color::rgb(-1.25, 0.25, 0.75),
+                    color: Color::rgb(0.75, 0.25, 0.25),
                     custom_size: Some(Vec2::new(30., 100.)),
                     ..default()
                 },
-                transform: Transform::from_xyz(-201., 0., 0.),
+                transform: Transform::from_xyz(0.0 + 30., window.height() / 2.0, 0.0),
                 ..default()
             },
             Player::P1,
@@ -37,7 +40,7 @@ pub fn players_spawn_system(
                     custom_size: Some(Vec2::new(-30.0, 100.0)),
                     ..default()
                 },
-                transform: Transform::from_xyz(199., 0., 0.),
+                transform: Transform::from_xyz(window.width() - 30., window.height() / 2.0, 0.0),
                 ..default()
             },
             Player::P2,
