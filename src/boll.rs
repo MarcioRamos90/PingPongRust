@@ -66,7 +66,5 @@ pub fn hit_corners(
         } else if t.translation.y >= y_max {
             acceleration.y *= -1.;
         }
-
-        println!("w {} h {} t {:?}",  win_w, win_h, t.translation);
     }
 }
