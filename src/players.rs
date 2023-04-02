@@ -7,6 +7,8 @@ pub struct PlayersPlugin;
 const WIDTH_PLAYER: f32 = 30.;
 const HEIGHT_PLAYER: f32 = 100.;
 
+const VELOCITY_PLAYER: f32 = 10.;
+
 impl Plugin for PlayersPlugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system(players_spawn_system)
@@ -52,25 +54,36 @@ pub fn players_spawn_system(
 fn player_keyboard_event_system(
     mut query: Query<(&mut Player, &mut Transform)>,
     keys: Res<Input<KeyCode>>,
+    window_query: Query<&Window, With<PrimaryWindow>>,
 ) {
+    let window = window_query.get_single().unwrap();
+    let (win_w, win_h) = (window.width(), window.height());
+
+    
     for (p, mut t) in &mut query.iter_mut() {
+        
+        let hit_up_wall: bool = win_h <= t.translation.y + HEIGHT_PLAYER/2.;
+        let hit_down_wall: bool = 0. >= t.translation.y - HEIGHT_PLAYER/2.;
+        
         match *p {
             Player::P1 => {
-                if keys.pressed(KeyCode::W) {
-                    t.translation.y += 12.;
+                if keys.pressed(KeyCode::W) && !hit_up_wall{
+                    t.translation.y += VELOCITY_PLAYER;
+                    println!("{} {}", win_h, t.translation.y);
                 }
 
-                if keys.pressed(KeyCode::S) {
-                    t.translation.y -= 12.;
+                if keys.pressed(KeyCode::S) && !hit_down_wall {
+                    t.translation.y -= VELOCITY_PLAYER;
+                    println!("{} {}", win_h, t.translation.y);
                 }
             }
             Player::P2 => {
-                if keys.pressed(KeyCode::Up) {
-                    t.translation.y += 12.;
+                if keys.pressed(KeyCode::Up) && !hit_up_wall {
+                    t.translation.y += VELOCITY_PLAYER;
                 }
 
-                if keys.pressed(KeyCode::Down) {
-                    t.translation.y -= 12.;
+                if keys.pressed(KeyCode::Down) && !hit_down_wall {
+                    t.translation.y -= VELOCITY_PLAYER;
                 }
             }
         }
