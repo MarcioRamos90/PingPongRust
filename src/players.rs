@@ -79,29 +79,35 @@ fn player_keyboard_event_system(
 
 fn hit_boll_system(
     query_players: Query<(&Transform, &Player)>,
-    mut query_boll: Query<(&mut Transform, &mut Acceleration, With<Boll>, Without<Player>)>,
+    mut query_boll: Query<(
+        &mut Transform,
+        &mut Acceleration,
+        With<Boll>,
+        Without<Player>,
+    )>,
 ) {
     let (mut boll_translation, mut boll_acceleration, _, _) = query_boll.get_single_mut().unwrap();
 
-    let p1_w_hit = WIDTH_PLAYER;
-    let p1_h_hit = HEIGHT_PLAYER;
+
 
     for (t, player) in query_players.iter() {
         match player {
             Player::P1 => {
-                if boll_translation.translation.x <= t.translation.x + WIDTH_PLAYER
-                && (t.translation.y <= boll_translation.translation.y
-                    && t.translation.y + HEIGHT_PLAYER >= boll_translation.translation.y)
+                if (boll_translation.translation.x <= t.translation.x + WIDTH_PLAYER
+                    && boll_translation.translation.x >= t.translation.x)
+                    && (t.translation.y - HEIGHT_PLAYER <= boll_translation.translation.y
+                        && t.translation.y + HEIGHT_PLAYER >= boll_translation.translation.y)
                 {
                     boll_acceleration.x *= -1.;
                 }
             }
             Player::P2 => {
-                if boll_translation.translation.x >= t.translation.x - WIDTH_PLAYER
-                && (t.translation.y <= boll_translation.translation.y
-                    && t.translation.y + HEIGHT_PLAYER >= boll_translation.translation.y)
+                if (boll_translation.translation.x >= t.translation.x - WIDTH_PLAYER
+                    && boll_translation.translation.x <= t.translation.x)
+                    && (t.translation.y - HEIGHT_PLAYER <= boll_translation.translation.y
+                        && t.translation.y + HEIGHT_PLAYER >= boll_translation.translation.y)
                 {
-                     boll_acceleration.x *= -1.;
+                    boll_acceleration.x *= -1.;
                 }
             }
         }
