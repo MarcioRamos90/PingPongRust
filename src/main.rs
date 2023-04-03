@@ -2,11 +2,10 @@
 
 use bevy::{prelude::*, window::PrimaryWindow, app::AppExit};
 
-mod components;
-mod players;
-mod boll;
+pub mod player;
+pub mod boll;
 
-use players::PlayersPlugin;
+use player::PlayersPlugin;
 use boll::BollPlugin;
 
 fn main() {

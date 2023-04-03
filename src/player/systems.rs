@@ -1,22 +1,9 @@
 use bevy::{prelude::*, window::PrimaryWindow};
 
-use crate::components::Player;
+use super::components::{Player};
+use super::{WIDTH_PLAYER, HEIGHT_PLAYER, VELOCITY_PLAYER};
+
 use crate::boll::components::{Acceleration, Boll};
-
-pub struct PlayersPlugin;
-
-const WIDTH_PLAYER: f32 = 30.;
-const HEIGHT_PLAYER: f32 = 100.;
-
-const VELOCITY_PLAYER: f32 = 10.;
-
-impl Plugin for PlayersPlugin {
-    fn build(&self, app: &mut App) {
-        app.add_startup_system(players_spawn_system)
-            .add_system(player_keyboard_event_system)
-            .add_system(hit_boll_system);
-    }
-}
 
 pub fn players_spawn_system(
     mut commands: Commands,
@@ -52,7 +39,7 @@ pub fn players_spawn_system(
     ]);
 }
 
-fn player_keyboard_event_system(
+pub fn player_keyboard_event_system(
     mut query: Query<(&mut Player, &mut Transform)>,
     keys: Res<Input<KeyCode>>,
     window_query: Query<&Window, With<PrimaryWindow>>,
@@ -91,7 +78,7 @@ fn player_keyboard_event_system(
     }
 }
 
-fn hit_boll_system(
+pub fn hit_boll_system(
     query_players: Query<(&Transform, &Player)>,
     mut query_boll: Query<(
         &mut Transform,
