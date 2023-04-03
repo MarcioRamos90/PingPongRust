@@ -11,7 +11,8 @@ impl Plugin for BollPlugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system(boll_spawn_system)
             .add_system(boll_mov_system)
-            .add_system(hit_corners);
+            .add_system(hit_corners)
+            .add_system(point_count_system);
     }
 }
 
@@ -65,6 +66,27 @@ pub fn hit_corners(
             acceleration.y *= -1.;
         } else if t.translation.y >= y_max {
             acceleration.y *= -1.;
+        }
+    }
+}
+
+fn point_count_system(
+    mut boll_query: Query<(&mut Transform, &mut Acceleration, With<Boll>)>,
+    window_query: Query<&Window, With<PrimaryWindow>>,
+) {
+    let window = window_query.get_single().unwrap();
+    let (win_w, win_h) = (window.width(), window.height());
+
+    let axis_min: f32 = 0.0 + BOLL_SIZE as f32;
+    let axis_max: f32 = win_w - BOLL_SIZE as f32;
+
+    for (mut t, mut acceleration, _) in boll_query.iter_mut() {
+        if t.translation.x <= axis_min {
+            t.translation.x = win_w / 2.; 
+            t.translation.y = win_h / 2.;
+        } else if t.translation.x >= axis_max {
+            t.translation.x = win_w / 2.; 
+            t.translation.y = win_h / 2.;
         }
     }
 }
