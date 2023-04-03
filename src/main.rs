@@ -4,9 +4,11 @@ use bevy::{prelude::*, window::PrimaryWindow, app::AppExit};
 
 pub mod player;
 pub mod boll;
+pub mod points;
 
 use player::PlayersPlugin;
 use boll::BollPlugin;
+use points::PointsPlugin;
 
 fn main() {
     App::new()
@@ -14,6 +16,7 @@ fn main() {
     .add_plugins(DefaultPlugins)
     .add_plugin(PlayersPlugin)
     .add_plugin(BollPlugin)
+    .add_plugin(PointsPlugin)
     .add_startup_system(spawn_camera)
     .add_system(exit_game)
     .run();

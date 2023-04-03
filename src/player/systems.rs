@@ -57,12 +57,10 @@ pub fn player_keyboard_event_system(
             Player::P1 => {
                 if keys.pressed(KeyCode::W) && !hit_up_wall{
                     t.translation.y += VELOCITY_PLAYER;
-                    println!("{} {}", win_h, t.translation.y);
                 }
 
                 if keys.pressed(KeyCode::S) && !hit_down_wall {
                     t.translation.y -= VELOCITY_PLAYER;
-                    println!("{} {}", win_h, t.translation.y);
                 }
             }
             Player::P2 => {

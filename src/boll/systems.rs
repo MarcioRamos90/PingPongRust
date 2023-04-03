@@ -2,8 +2,9 @@
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle, window::PrimaryWindow};
 use rand::Rng;
 
-use super::components::{Acceleration, Boll};
 use super::{BOLL_SIZE};
+use super::components::{Acceleration, Boll};
+use crate::points::resources::Points;
 
 pub fn boll_spawn_system(
     mut commands: Commands,
@@ -62,6 +63,7 @@ pub fn hit_corners(
 pub fn point_count_system(
     mut boll_query: Query<(&mut Transform, &mut Acceleration, With<Boll>)>,
     window_query: Query<&Window, With<PrimaryWindow>>,
+    mut points: ResMut<Points>,
 ) {
     let window = window_query.get_single().unwrap();
     let (win_w, win_h) = (window.width(), window.height());
@@ -73,9 +75,13 @@ pub fn point_count_system(
         if t.translation.x <= axis_min {
             t.translation.x = win_w / 2.; 
             t.translation.y = win_h / 2.;
+
+            points.p2 += 1;
         } else if t.translation.x >= axis_max {
             t.translation.x = win_w / 2.; 
             t.translation.y = win_h / 2.;
+
+            points.p1 += 1;
         }
     }
 }
