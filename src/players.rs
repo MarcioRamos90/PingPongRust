@@ -1,6 +1,7 @@
 use bevy::{prelude::*, window::PrimaryWindow};
 
-use crate::components::{Acceleration, Boll, Player};
+use crate::components::Player;
+use crate::boll::components::{Acceleration, Boll};
 
 pub struct PlayersPlugin;
 

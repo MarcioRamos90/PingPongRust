@@ -1,20 +1,9 @@
+
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle, window::PrimaryWindow};
 use rand::Rng;
 
-use crate::components::{Acceleration, Boll};
-
-const BOLL_SIZE: f32 = 30.;
-
-pub struct BollPlugin;
-
-impl Plugin for BollPlugin {
-    fn build(&self, app: &mut App) {
-        app.add_startup_system(boll_spawn_system)
-            .add_system(boll_mov_system)
-            .add_system(hit_corners)
-            .add_system(point_count_system);
-    }
-}
+use super::components::{Acceleration, Boll};
+use super::{BOLL_SIZE};
 
 pub fn boll_spawn_system(
     mut commands: Commands,
@@ -70,7 +59,7 @@ pub fn hit_corners(
     }
 }
 
-fn point_count_system(
+pub fn point_count_system(
     mut boll_query: Query<(&mut Transform, &mut Acceleration, With<Boll>)>,
     window_query: Query<&Window, With<PrimaryWindow>>,
 ) {
