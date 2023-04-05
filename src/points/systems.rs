@@ -50,7 +50,7 @@ pub fn points_text_spawn_system(
                 font_size: 20.0,
                 color: Color::YELLOW_GREEN,
             },
-        ) 
+        )
         .with_text_alignment(TextAlignment::Center)
         .with_style(Style {
             position_type: PositionType::Absolute,
@@ -71,14 +71,14 @@ pub fn update_points(
     asset_server: Res<AssetServer>,
 ) {
     if points.is_changed() {
-        for (mut t, p ) in &mut mut_query_p1_txt {
+        for (mut t, p) in &mut mut_query_p1_txt {
             match *p {
-                PointsType::P1 =>  {
-                   t.sections[0].value = format!("Player 1: {}", points.p1);
-               }
-               PointsType::P2 => {
-                   t.sections[0].value = format!("Player 2: {}", points.p2);
-               } 
+                PointsType::P1 => {
+                    t.sections[0].value = format!("Player 1: {}", points.p1);
+                }
+                PointsType::P2 => {
+                    t.sections[0].value = format!("Player 2: {}", points.p2);
+                }
             }
         }
         println!("Points: p1: {} ------ p2: {}", points.p1, points.p2);
