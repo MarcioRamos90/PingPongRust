@@ -1,10 +1,13 @@
-
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle, window::PrimaryWindow};
 use rand::Rng;
 
-use super::{BOLL_SIZE};
 use super::components::{Acceleration, Boll};
-use crate::points::resources::Points;
+use super::BOLL_SIZE;
+
+use crate::{
+    events::GameWin, player::components::Player, points::resources::Points,
+    rules::TOTAL_POINTS_END_GAME_DEFAULT,
+};
 
 pub fn boll_spawn_system(
     mut commands: Commands,
@@ -61,6 +64,8 @@ pub fn hit_corners(
 }
 
 pub fn point_count_system(
+    mut game_winner_event_reader: EventWriter<GameWin>,
+
     mut boll_query: Query<(&mut Transform, &mut Acceleration, With<Boll>)>,
     window_query: Query<&Window, With<PrimaryWindow>>,
     mut points: ResMut<Points>,
@@ -73,15 +78,23 @@ pub fn point_count_system(
 
     for (mut t, mut acceleration, _) in boll_query.iter_mut() {
         if t.translation.x <= axis_min {
-            t.translation.x = win_w / 2.; 
+            t.translation.x = win_w / 2.;
             t.translation.y = win_h / 2.;
 
             points.p2 += 1;
+
+            if TOTAL_POINTS_END_GAME_DEFAULT <= points.p2 {
+                game_winner_event_reader.send(GameWin { player: Player::P2 })
+            }
         } else if t.translation.x >= axis_max {
-            t.translation.x = win_w / 2.; 
+            t.translation.x = win_w / 2.;
             t.translation.y = win_h / 2.;
 
             points.p1 += 1;
+
+            if TOTAL_POINTS_END_GAME_DEFAULT <= points.p1 {
+                game_winner_event_reader.send(GameWin { player: Player::P1 })
+            }
         }
     }
 }
